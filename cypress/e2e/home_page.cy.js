@@ -34,6 +34,7 @@ describe("Test du formulaire", () => {
   });
   
   it("Vérifie que le formulaire est invalide sans genre", () => {
+
     cy.get(firstName).type(user.firstname);
     cy.get(lastName).type(user.lastname);
     cy.get(message).type(message_value);
@@ -48,6 +49,7 @@ describe("Test du formulaire", () => {
   });
   
   it("Vérifie que le formulaire est invalide sans prénom", () => {
+
     cy.get(gender).select(user.gender);
     cy.get(lastName).type(user.lastname);
     cy.get(message).type(message_value);
@@ -62,6 +64,7 @@ describe("Test du formulaire", () => {
   });
   
   it("Vérifie que le formulaire est invalide sans nom", () => {
+
     cy.get(gender).select(user.gender);
     cy.get(firstName).type(user.lastname);
     cy.get(message).type(message_value);
@@ -76,6 +79,7 @@ describe("Test du formulaire", () => {
   });
   
   it("Vérifie que le formulaire est invalide sans message personnel", () => {
+
     cy.get(gender).select(user.gender);
     cy.get(firstName).type(user.firstname);
     cy.get(lastName).type(user.lastname);
@@ -90,6 +94,7 @@ describe("Test du formulaire", () => {
   });
   
   it("Vérifie que le formulaire est valide (sans champs optionels)", () => {
+
     cy.get(gender).select(user.gender);
     cy.get(firstName).type(user.firstname);
     cy.get(lastName).type(user.lastname);
@@ -105,6 +110,7 @@ describe("Test du formulaire", () => {
   });
   
   it("Vérifie que le formulaire est valide (avec champs optionels)", () => {
+    
     cy.get(gender).select(user.gender);
     cy.get(firstName).type(user.firstname);
     cy.get(lastName).type(user.lastname);
