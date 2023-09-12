@@ -1,66 +1,122 @@
-import User from '../support/user'
+import User from "../support/user";
 
-let submitButton = '#submit-button'
-let gender = '#gender'
-let firstName = 'first-name'
-let lastName = 'last-name'
-let phone = ':nth-child(6)'
-let description = ':nth-child(8)'
+let gender = "#gender";
+let firstName = "#first-name";
+let lastName = "#last-name";
+let message = "#message";
+let company = "#company";
+let phone = "#phone";
 
-describe('Test du formulaire de contact', () => {
+let contact_form = "#contact-form";
 
-  before(() => {
-    cy.visit('/')
-  })
-  it('verification formulaire vide', () => {
-    let verifForm = 'Validation errors occurred. Please confirm the fields and submit it again.'
-    
-    cy.get(submitButton).click().as('validateForm')
+let popin = ".popin";
+let popin_message = "#popin-message";
+let popin_success = ".popin-success";
+let popin_success_msg = "Le message a été envoyé.";
+let popin_error_msg = "Veuillez remplir tous les champs obligatoires.";
 
-  })
+let message_value = "Message de test";
+let phone_value = "0102030405"
+let company_value = "Microsoft"
 
-  it('Vérifier les messages d erreur des champs requis', () => {
-    let verifString = 'Please fill the required field.'
-    
-    //firstName
-    cy.get(firstName).should('contain.text',verifString)
-    //lastName
-    cy.get(lastName).should('contain.text',verifString)
-    //phone
-    cy.get(phone).should('contain.text',verifString)
+let user;
 
-  })
-  
-  /*
-  it("Remplir le formulaire correctement", () => {
+describe("Test du formulaire", () => {
+  beforeEach(() => {
+    cy.visit("/");
 
-    // Récupération de l'utilisateur
-    let user = new User()
-    user.getRandomUser()
-    cy.log(user.id)
+    user = new User();
+    user.getRandomUser();
 
+    cy.log(user.id);
+  });
 
-    let errorForm = 'Failed to send your message. Please try later or contact the administrator by another method.'
-    //gender
-    cy.get(gender).type({gender})
+  it("Vérifie que le formulaire est invalide sans genre", () => {
+    cy.get(firstName).type(user.firstname);
+    cy.get(lastName).type(user.lastname);
+    cy.get(message).type(message_value);
 
-    //firstname
-    cy.get(firstName).type('Bilel')
+    cy.get(contact_form).submit();
 
-    //lastname
-    cy.get(lastName).type('Khinache')
-    
-    //phone
-    cy.get(phone).type('0777868102')
+    cy.get(popin).should("be.visible");
 
-    //Description
-    cy.get(description).type('Lorem ipsum')
+    cy.get(popin_message).should("contain", popin_error_msg);
 
-    // Validation du formulaire
-    cy.get(submitButton).click().as('validateForm')
-    cy.get(submitButtonResponse).should('not.contain',errorForm)
- 
+    cy.get(popin_success).should("not.exist");
+  });
 
-  })
-  */
-})
+  it("Vérifie que le formulaire est invalide sans prénom", () => {
+    cy.get(gender).select(user.gender);
+    cy.get(lastName).type(user.lastname);
+    cy.get(message).type(message_value);
+
+    cy.get(contact_form).submit();
+
+    cy.get(popin).should("be.visible");
+
+    cy.get(popin_message).should("contain", popin_error_msg);
+
+    cy.get(popin_success).should("not.exist");
+  });
+
+  it("Vérifie que le formulaire est invalide sans nom", () => {
+    cy.get(gender).select(user.gender);
+    cy.get(firstName).type(user.lastname);
+    cy.get(message).type(message_value);
+
+    cy.get(contact_form).submit();
+
+    cy.get(popin).should("be.visible");
+
+    cy.get(popin_message).should("contain", popin_error_msg);
+
+    cy.get(popin_success).should("not.exist");
+  });
+
+  it("Vérifie que le formulaire est invalide sans message personnel", () => {
+    cy.get(gender).select(user.gender);
+    cy.get(firstName).type(user.firstname);
+    cy.get(lastName).type(user.lastname);
+
+    cy.get(contact_form).submit();
+
+    cy.get(popin).should("be.visible");
+
+    cy.get(popin_message).should("contain", popin_error_msg);
+
+    cy.get(popin_success).should("not.exist");
+  });
+
+  it("Vérifie que le formulaire est valide (sans champs optionels)", () => {
+    cy.get(gender).select(user.gender);
+    cy.get(firstName).type(user.firstname);
+    cy.get(lastName).type(user.lastname);
+    cy.get(message).type(message_value);
+
+    cy.get(contact_form).submit();
+
+    cy.get(popin).should("be.visible");
+
+    cy.get(popin_message).should("contain", popin_success_msg);
+
+    cy.get(popin_success).should("exist");
+  });
+
+  it("Vérifie que le formulaire est valide (avec champs optionels)", () => {
+    cy.get(gender).select(user.gender);
+    cy.get(firstName).type(user.firstname);
+    cy.get(lastName).type(user.lastname);
+    cy.get(message).type(message_value);
+
+    cy.get(company).type(company_value);
+    cy.get(phone).type(phone_value);
+
+    cy.get(contact_form).submit();
+
+    cy.get(popin).should("be.visible");
+
+    cy.get(popin_message).should("contain", popin_success_msg);
+
+    cy.get(popin_success).should("exist");
+  });
+});
